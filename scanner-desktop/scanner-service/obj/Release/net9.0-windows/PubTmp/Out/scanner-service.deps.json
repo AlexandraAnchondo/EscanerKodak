@@ -8,8 +8,7 @@
     ".NETCoreApp,Version=v9.0": {
       "scanner-service/1.0.0": {
         "dependencies": {
-          "TwainDotNet.Win": "1.0.0",
-          "Interop.WIA": "1.0.0.0"
+          "TwainDotNet.Win": "1.0.0"
         },
         "runtime": {
           "scanner-service.dll": {}
@@ -22,14 +21,6 @@
             "fileVersion": "1.0.0.0"
           },
           "lib/net40/TwainDotNet.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
-          }
-        }
-      },
-      "Interop.WIA/1.0.0.0": {
-        "runtime": {
-          "Interop.WIA.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -49,11 +40,6 @@
       "sha512": "sha512-JLT7lBQF07LAr+1X+gUKnIlIYe1NHC62OrzDIPFbJ0jX7itPSPQW2jAQIYB4IL/k+YTUhIBsNQBceMeVJ4u51A==",
       "path": "twaindotnet.win/1.0.0",
       "hashPath": "twaindotnet.win.1.0.0.nupkg.sha512"
-    },
-    "Interop.WIA/1.0.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
     }
   }
 }

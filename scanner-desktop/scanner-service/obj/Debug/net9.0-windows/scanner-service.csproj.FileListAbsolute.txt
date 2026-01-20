@@ -4,8 +4,6 @@ C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanne
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Debug\net9.0-windows\scanner-service.csproj.CoreCompileInputs.cache
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Debug\net9.0-windows\scanner-service.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Debug\net9.0-windows\scanner-service.sourcelink.json
-C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Debug\net9.0-windows\Interop.WIA.dll
-C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Debug\net9.0-windows\scanner-service.csproj.ResolveComReference.cache
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\bin\Debug\net9.0-windows\appsettings.Development.json
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\bin\Debug\net9.0-windows\appsettings.json
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\bin\Debug\net9.0-windows\scanner-service.staticwebassets.endpoints.json
@@ -14,7 +12,6 @@ C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanne
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\bin\Debug\net9.0-windows\scanner-service.runtimeconfig.json
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\bin\Debug\net9.0-windows\scanner-service.dll
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\bin\Debug\net9.0-windows\scanner-service.pdb
-C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\bin\Debug\net9.0-windows\Interop.WIA.dll
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Debug\net9.0-windows\scopedcss\bundle\scanner-service.styles.css
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Debug\net9.0-windows\staticwebassets.build.json
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Debug\net9.0-windows\staticwebassets.development.json

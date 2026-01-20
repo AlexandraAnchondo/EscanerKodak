@@ -5,6 +5,5 @@ C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanne
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Release\net9.0-windows\PubTmp\Out\scanner-service.deps.json
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Release\net9.0-windows\PubTmp\Out\scanner-service.runtimeconfig.json
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Release\net9.0-windows\PubTmp\Out\scanner-service.pdb
-C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Release\net9.0-windows\PubTmp\Out\Interop.WIA.dll
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Release\net9.0-windows\PubTmp\Out\TwainDotNet.Win.dll
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Release\net9.0-windows\PubTmp\Out\TwainDotNet.dll

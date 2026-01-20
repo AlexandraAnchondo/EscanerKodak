@@ -6,9 +6,6 @@ C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanne
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\bin\Release\net9.0-windows\scanner-service.runtimeconfig.json
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\bin\Release\net9.0-windows\scanner-service.dll
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\bin\Release\net9.0-windows\scanner-service.pdb
-C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\bin\Release\net9.0-windows\Interop.WIA.dll
-C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Release\net9.0-windows\Interop.WIA.dll
-C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Release\net9.0-windows\scanner-service.csproj.ResolveComReference.cache
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Release\net9.0-windows\scanner-service.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Release\net9.0-windows\scanner-service.AssemblyInfoInputs.cache
 C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Release\net9.0-windows\scanner-service.AssemblyInfo.cs
