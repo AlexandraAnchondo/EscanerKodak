@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "LdEKvHPoNrF3RvoxDKOHuvHF1Kl2Z+4bAoF4qAyxAoA=",
+  "Source": "scanner-service",
+  "BasePath": "_content/scanner-service",
+  "Mode": "Default",
+  "ManifestType": "Publish",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

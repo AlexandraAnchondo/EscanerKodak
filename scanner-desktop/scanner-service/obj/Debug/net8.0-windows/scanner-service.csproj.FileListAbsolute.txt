@@ -1,0 +1,8 @@
+C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Debug\net8.0-windows\scanner-service.csproj.AssemblyReference.cache
+C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Debug\net8.0-windows\scanner-service.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Debug\net8.0-windows\scanner-service.AssemblyInfoInputs.cache
+C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Debug\net8.0-windows\scanner-service.AssemblyInfo.cs
+C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Debug\net8.0-windows\scanner-service.csproj.CoreCompileInputs.cache
+C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Debug\net8.0-windows\scanner-service.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Debug\net8.0-windows\scanner-service.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\obj\Debug\net8.0-windows\scanner-service.sourcelink.json

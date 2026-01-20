@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner</_PublishTargetUrl>
+    <History>True|2026-01-20T23:09:08.1679818Z||;True|2026-01-20T14:59:02.8352456-08:00||;True|2026-01-20T14:47:19.6925560-08:00||;True|2026-01-20T14:27:07.9649860-08:00||;True|2026-01-20T14:20:41.9930017-08:00||;False|2026-01-20T14:20:36.7560087-08:00||;True|2026-01-20T13:59:47.3168266-08:00||;True|2026-01-20T13:57:54.1511087-08:00||;True|2026-01-20T13:35:11.5668645-08:00||;True|2026-01-20T13:24:08.8909843-08:00||;False|2026-01-20T13:23:35.0983317-08:00||;True|2026-01-20T12:19:13.6043544-08:00||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>

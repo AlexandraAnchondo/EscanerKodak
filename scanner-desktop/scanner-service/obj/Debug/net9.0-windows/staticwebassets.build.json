@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "kzOcua7jMUMmMVj5YMKVVeBWPW2bEwpiX26TTj+z7Go=",
+  "Source": "scanner-service",
+  "BasePath": "_content/scanner-service",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
