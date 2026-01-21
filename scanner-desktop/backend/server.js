@@ -1,7 +1,9 @@
 require('dotenv').config();
 const cors = require('cors');
-const express = require('express')
+const express = require('express');
 const path = require('path');
+const { PDFDocument } = require('pdf-lib');
+const fs = require('fs');
 
 // CORS config: solo el backend debe agregar estos headers
 const corsOptions = {
@@ -77,6 +79,44 @@ app.get('/scan/status/:id', async (req, res) => {
         res.status(500).json({ error: e.message });
     }
 });
+
+app.post('/create-pdf', async (req, res) => {
+    try {
+        const { files } = req.body
+        const pdfDoc = await PDFDocument.create()
+
+        for (const file of files) {
+            const imgPath = path.join(scansDir, file)
+            const imgBytes = fs.readFileSync(imgPath)
+
+            const image = file.endsWith('.png')
+                ? await pdfDoc.embedPng(imgBytes)
+                : await pdfDoc.embedJpg(imgBytes)
+
+            const page = pdfDoc.addPage([image.width, image.height])
+            page.drawImage(image, {
+                x: 0,
+                y: 0,
+                width: image.width,
+                height: image.height
+            })
+        }
+
+        const pdfBytes = await pdfDoc.save()
+
+        res.setHeader('Content-Type', 'application/pdf')
+        res.setHeader(
+            'Content-Disposition',
+            'attachment; filename="documento_escaneado.pdf"'
+        )
+
+        res.send(Buffer.from(pdfBytes))
+    } catch (e) {
+        console.error(e)
+        res.status(500).json({ error: 'Error al crear PDF' })
+    }
+})
+
 
 app.listen(3001, () =>
     console.log('Backend corriendo en http://localhost:3001')

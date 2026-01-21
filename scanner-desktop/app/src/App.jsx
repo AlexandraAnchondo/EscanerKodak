@@ -16,6 +16,17 @@ import {
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import ZoomInIcon from '@mui/icons-material/ZoomIn'
+import {
+  DndContext,
+  closestCenter
+} from '@dnd-kit/core'
+import {
+  SortableContext,
+  useSortable,
+  arrayMove,
+  rectSortingStrategy
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 
 const statusMap = {
   starting: { text: 'Iniciando', progress: 20 },
@@ -23,6 +34,86 @@ const statusMap = {
   done: { text: 'Completado', progress: 100 },
   completed: { text: 'Completado', progress: 100 },
   error: { text: 'Error', progress: 100 }
+}
+
+function SortableImage({ file, index, selected, onToggle, onRemove, onZoom }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition
+  } = useSortable({ id: file })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition
+  }
+
+  return (
+    <Paper
+      ref={setNodeRef}
+      style={style}
+      sx={{
+        p: 1,
+        border: selected ? '2px solid #1976d2' : '1px solid #ccc',
+        boxShadow: selected ? 4 : 1
+      }}
+    >
+      {/* HEADER */}
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        {/* HANDLE DRAG */}
+        <Box
+          {...attributes}
+          {...listeners}
+          sx={{
+            cursor: 'grab',
+            fontSize: 12,
+            fontWeight: 'bold',
+            color: '#1976d2'
+          }}
+        >
+          #{index + 1}
+        </Box>
+
+        <IconButton
+          color="error"
+          onClick={onRemove}
+          size="small"
+        >
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+      </Box>
+
+      {/* CHECKBOX */}
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={selected}
+            onChange={onToggle}
+            size="small"
+          />
+        }
+        sx={{ mt: -1 }}
+      />
+
+      {/* IMAGE */}
+      <Box sx={{ cursor: 'zoom-in' }} onClick={onZoom}>
+        <img
+          src={`http://localhost:3001/files/${file}`}
+          style={{ width: '100%', borderRadius: 4 }}
+        />
+      </Box>
+
+      <Box textAlign="center" mt={0.5}>
+        <ZoomInIcon fontSize="small" />
+      </Box>
+    </Paper>
+  )
 }
 
 function App() {
@@ -193,55 +284,79 @@ function App() {
         </Box>
       </Paper>
 
+      <Box mt={3} mb={3}>
+        <Button
+          variant="contained"
+          color="success"
+          disabled={selectedImages.length === 0}
+          onClick={async () => {
+            const res = await fetch('http://localhost:3001/create-pdf', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                files: images.filter(f => selectedImages.includes(f))
+              })
+            })
+
+            const blob = await res.blob()
+            const url = window.URL.createObjectURL(blob)
+
+            const a = document.createElement('a')
+            a.href = url
+            a.download = 'documento_escaneado.pdf'
+            document.body.appendChild(a)
+            a.click()
+            a.remove()
+
+            window.URL.revokeObjectURL(url)
+          }}
+        >
+          Crear PDF
+        </Button>
+      </Box>
+
       {/* GALERÍA */}
-      <Grid container spacing={2}>
-        {images.map((f) => {
-          const selected = selectedImages.includes(f)
+      <DndContext
+        collisionDetection={closestCenter}
+        onDragEnd={(event) => {
+          const { active, over } = event
+          if (over && active.id !== over.id) {
+            setImages((items) => {
+              const oldIndex = items.indexOf(active.id)
+              const newIndex = items.indexOf(over.id)
+              return arrayMove(items, oldIndex, newIndex)
+            })
+          }
+        }}
+      >
+        <SortableContext items={images} strategy={rectSortingStrategy}>
+          <Grid container spacing={2}>
+            {images.map((f, index) => {
+              const selected = selectedImages.includes(f)
 
-          return (
-            <Grid item xs={6} sm={4} md={3} lg={2} key={f} sx={{width: '20%'}}>
-              <Paper
-                sx={{
-                  p: 1,
-                  border: selected ? '2px solid #1976d2' : '1px solid #ccc',
-                  boxShadow: selected ? 4 : 1
-                }}
-              >
-                <Box display="flex" justifyContent="space-between" alignItems="center">
-                  <Checkbox
-                    checked={selected}
-                    onChange={() => toggleSelect(f)}
-                    size="small"
-                  />
-
-                  <IconButton
-                    color="error"
-                    onClick={() => removeImage(f)}
-                    size="small"
-                  >
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                </Box>
-
-                <Box
-                  sx={{ cursor: 'zoom-in' }}
-                  onClick={() => setZoomImage(f)}
+              return (
+                <Grid
+                  item
+                  key={f}
+                  sx={{
+                    width: '20%',   // 👈 RESPETAMOS TU REQUERIMIENTO
+                    minWidth: 180
+                  }}
                 >
-                  <img
-                    src={`http://localhost:3001/files/${f}`}
-                    alt={f}
-                    style={{ width: '100%', borderRadius: 4 }}
+                  <SortableImage
+                    file={f}
+                    index={index}
+                    selected={selected}
+                    onToggle={() => toggleSelect(f)}
+                    onRemove={() => removeImage(f)}
+                    onZoom={() => setZoomImage(f)}
                   />
-                </Box>
-
-                <Box textAlign="center" mt={0.5}>
-                  <ZoomInIcon fontSize="small" />
-                </Box>
-              </Paper>
-            </Grid>
-          )
-        })}
-      </Grid>
+                </Grid>
+              )
+            })}
+          </Grid>
+        </SortableContext>
+      </DndContext>
 
       {/* ZOOM */}
       {zoomImage && (
