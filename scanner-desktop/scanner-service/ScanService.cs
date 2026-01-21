@@ -17,6 +17,8 @@ public class ScanJob
     public List<string> ImagePaths { get; set; } = new List<string>();
     public bool Completed { get; set; } = false;
     public Exception Error { get; set; } = null;
+    public List<string> ImageBase64 { get; set; } = new List<string>();
+
 }
 
 public class ScanService
@@ -50,10 +52,10 @@ public class ScanService
             {
                 using var form = new Form();
                 form.ShowInTaskbar = false;
-                form.StartPosition = FormStartPosition.Manual;
-                form.Size = new System.Drawing.Size(1, 1); // Form pequeño
-                form.Location = new System.Drawing.Point(-100, -100); // Fuera de pantalla
-                form.WindowState = FormWindowState.Normal; // debe estar Normal para que tenga Handle
+                form.StartPosition = FormStartPosition.CenterScreen;
+                form.Size = new Size(200, 200);
+                form.Location = new Point(0, 0);
+                form.WindowState = FormWindowState.Normal;
 
                 var twain = new Twain(new WinFormsWindowMessageHook(form));
 
@@ -97,13 +99,20 @@ public class ScanService
                 string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "scans");
                 Directory.CreateDirectory(folder);
 
+                // Después de guardar cada imagen, añade Base64
                 foreach (var img in scannedImages)
                 {
                     string path = Path.Combine(folder, $"scan_{Guid.NewGuid()}.jpg");
                     img.Save(path, ImageFormat.Jpeg);
                     job.ImagePaths.Add(path);
+
+                    using var ms = new MemoryStream();
+                    img.Save(ms, ImageFormat.Jpeg);
+                    string base64 = Convert.ToBase64String(ms.ToArray());
+                    job.ImageBase64.Add(base64); // <-- nueva propiedad
                     img.Dispose();
                 }
+
 
                 job.Completed = true;
             });

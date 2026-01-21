@@ -58,6 +58,16 @@ app.post('/scan', async (req, res) => {
     }
 })
 
+app.get('/scan/status/:id', async (req, res) => {
+    try {
+        const r = await fetch(`http://localhost:5000/scan/status/${req.params.id}`);
+        const data = await r.json();
+        res.json(data);
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
 app.listen(3001, () =>
     console.log('Backend on http://localhost:3001')
 )

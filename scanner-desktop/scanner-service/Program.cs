@@ -52,7 +52,7 @@ app.MapGet("/scan/status/{id}", (string id, ScanService service) =>
     if (job.Error != null)
         return Results.Ok(new { status = "error", error = job.Error.Message });
 
-    return Results.Ok(new { status = "done", images = job.ImagePaths });
+    return Results.Ok(new { status = "done", images = job.ImageBase64 });
 });
 
 app.Run();
