@@ -2,10 +2,20 @@ using TwainDotNet.WinFroms;
 using TwainDotNet;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.SetMinimumLevel(LogLevel.Warning);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSingleton<ScanService>(); // Registrar servicio
 
 var app = builder.Build();
+
+app.MapGet("/health", () =>
+{
+    return Results.Ok(new { ok = true });
+});
 
 app.MapGet("/scanners", (ScanService service) =>
 {
@@ -52,7 +62,11 @@ app.MapGet("/scan/status/{id}", (string id, ScanService service) =>
     if (job.Error != null)
         return Results.Ok(new { status = "error", error = job.Error.Message });
 
-    return Results.Ok(new { status = "done", images = job.ImageBase64 });
+    return Results.Ok(new
+    {
+        status = "done",
+        files = job.ImagePaths.Select(Path.GetFileName)
+    });
 });
 
 app.Run();

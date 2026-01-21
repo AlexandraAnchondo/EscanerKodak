@@ -31,7 +31,8 @@ async function waitFor(url, name, retries = 20) {
                 console.log(`✅ ${name} listo`)
                 return
             }
-        } catch (_) { }
+        // eslint-disable-next-line no-unused-vars
+        } catch (_) { /* empty */ }
 
         console.log(`⏳ Esperando ${name}...`)
         await new Promise(r => setTimeout(r, 500))
@@ -41,14 +42,7 @@ async function waitFor(url, name, retries = 20) {
 }
 
 app.whenReady().then(async () => {
-    // 🟦 Backend Node
-    backendProcess = spawn(
-        'node',
-        [join(__dirname, '../../backend/server.js')],
-        { stdio: 'inherit', windowsHide: true }
-    )
-
-    // 🟩 Scanner .NET
+    // 🟩 Scanner .NET PRIMERO
     scannerProcess = spawn(
         join(__dirname, '../../scanner/scanner-service.exe'),
         [],
@@ -56,15 +50,22 @@ app.whenReady().then(async () => {
     )
 
     try {
-        // ⏳ Esperar a que ambos estén listos
-        await waitFor('http://localhost:5000/scanners', 'Scanner Service')
-        await waitFor('http://localhost:3001/ping', 'Backend')
+        await waitFor('http://localhost:5000/health', 'Scanner Service', 40)
 
-        // 🪟 Crear ventana SOLO cuando todo está listo
+        // 🟦 Backend Node DESPUÉS
+        backendProcess = spawn(
+            'node',
+            [join(__dirname, '../../backend/server.js')],
+            { stdio: 'inherit', windowsHide: true }
+        )
+
+        await waitFor('http://localhost:3001/ping', 'Backend', 20)
+
+        // 🪟 Renderer AL FINAL
         createWindow()
 
     } catch (err) {
-        console.error(err)
+        console.error('❌ Error al iniciar:', err)
         app.quit()
     }
 })

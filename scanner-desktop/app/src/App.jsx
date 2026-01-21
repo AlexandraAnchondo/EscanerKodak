@@ -4,7 +4,7 @@ function App() {
   const [scanners, setScanners] = useState([])
   const [selected, setSelected] = useState('')
   const [jobId, setJobId] = useState(null)
-  const [images, setImages] = useState([])
+  const [files, setFiles] = useState([]);
   const [status, setStatus] = useState('')
 
   useEffect(() => {
@@ -22,8 +22,7 @@ function App() {
           .then(data => {
             setStatus(data.status)
             if (data.status === 'done') {
-              setImages(data.images) // array de base64
-              clearInterval(interval)
+              setFiles(data.files);
             }
           })
       }, 1000) // cada segundo revisa
@@ -59,8 +58,12 @@ function App() {
       {status && <p>Estado: {status}</p>}
 
       <div>
-        {images.map((b64, i) => (
-          <img key={i} src={`data:image/jpeg;base64,${b64}`} alt={`Escaneo ${i + 1}`} style={{ margin: 10, maxWidth: 300 }} />
+        {files.map((f, i) => (
+          <img
+            key={i}
+            src={`http://localhost:3001/files/${f}`}
+            style={{ maxWidth: 300, margin: 10 }}
+          />
         ))}
       </div>
     </div>

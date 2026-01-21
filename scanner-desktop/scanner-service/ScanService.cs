@@ -14,17 +14,16 @@ using TwainDotNet.WinFroms;
 public class ScanJob
 {
     public string ScannerName { get; set; }
-    public List<string> ImagePaths { get; set; } = new List<string>();
-    public bool Completed { get; set; } = false;
-    public Exception Error { get; set; } = null;
-    public List<string> ImageBase64 { get; set; } = new List<string>();
-
+    public List<string> ImagePaths { get; set; } = new();
+    public bool Completed { get; set; }
+    public Exception Error { get; set; }
 }
 
 public class ScanService
 {
     private readonly ConcurrentDictionary<Guid, ScanJob> _jobs = new();
-    
+    private readonly string _scanFolder = Path.Combine(AppContext.BaseDirectory, "scans");
+
     public Guid QueueScan(string scannerName)
     {
         var jobId = Guid.NewGuid();
@@ -76,15 +75,11 @@ public class ScanService
                     form.Invoke(new Action(() => form.Close()));
                 };
 
-                var settings = new TwainDotNet.ScanSettings()
+                var settings = new TwainDotNet.ScanSettings
                 {
                     UseDocumentFeeder = true,
                     ShowTwainUI = false,
-                    ShowProgressIndicatorUI = false,
-                    UseDuplex = true,
-                    Resolution = ResolutionSettings.ColourPhotocopier,
-                    Area = null,
-                    ShouldTransferAllPages = true
+                    ShowProgressIndicatorUI = false
                 };
 
                 form.Shown += (s, e) =>
@@ -99,20 +94,18 @@ public class ScanService
                 string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "scans");
                 Directory.CreateDirectory(folder);
 
-                // Después de guardar cada imagen, añade Base64
+                // Después de guardar cada imagen
+                Directory.CreateDirectory(_scanFolder);
+
                 foreach (var img in scannedImages)
                 {
-                    string path = Path.Combine(folder, $"scan_{Guid.NewGuid()}.jpg");
-                    img.Save(path, ImageFormat.Jpeg);
-                    job.ImagePaths.Add(path);
+                    string fileName = $"scan_{Guid.NewGuid()}.jpg";
+                    string path = Path.Combine(_scanFolder, fileName);
 
-                    using var ms = new MemoryStream();
-                    img.Save(ms, ImageFormat.Jpeg);
-                    string base64 = Convert.ToBase64String(ms.ToArray());
-                    job.ImageBase64.Add(base64); // <-- nueva propiedad
+                    img.Save(path, ImageFormat.Jpeg);
+                    job.ImagePaths.Add(fileName);
                     img.Dispose();
                 }
-
 
                 job.Completed = true;
             });
