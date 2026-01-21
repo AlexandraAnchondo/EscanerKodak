@@ -43,7 +43,7 @@ app.MapPost("/scan", (ScanRequest req, ScanService service) =>
     if (string.IsNullOrWhiteSpace(req.ScannerName))
         return Results.BadRequest("ScannerName requerido");
 
-    var jobId = service.QueueScan(req.ScannerName);
+    var jobId = service.QueueScan(req.ScannerName, req.Settings);
     return Results.Ok(new { jobId });
 });
 

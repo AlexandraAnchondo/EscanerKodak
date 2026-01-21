@@ -14,6 +14,7 @@ using TwainDotNet.WinFroms;
 public class ScanJob
 {
     public string ScannerName { get; set; }
+    public ScanSettingsDto Settings { get; set; }   // ⬅️ NUEVO
     public List<string> ImagePaths { get; set; } = new();
     public bool Completed { get; set; }
     public Exception Error { get; set; }
@@ -24,15 +25,19 @@ public class ScanService
     private readonly ConcurrentDictionary<Guid, ScanJob> _jobs = new();
     private readonly string _scanFolder = Path.Combine(AppContext.BaseDirectory, "scans");
 
-    public Guid QueueScan(string scannerName)
+    public Guid QueueScan(string scannerName, ScanSettingsDto settings)
     {
         var jobId = Guid.NewGuid();
-        var job = new ScanJob { ScannerName = scannerName };
+
+        var job = new ScanJob
+        {
+            ScannerName = scannerName,
+            Settings = settings
+        };
+
         _jobs[jobId] = job;
 
-        // Ejecutar escaneo en hilo STA
         Task.Run(() => RunScan(jobId, job));
-
         return jobId;
     }
 
@@ -77,9 +82,19 @@ public class ScanService
 
                 var settings = new TwainDotNet.ScanSettings
                 {
-                    UseDocumentFeeder = true,
+                    UseDocumentFeeder = job.Settings.UseFeeder,
+                    UseDuplex = job.Settings.Duplex,
                     ShowTwainUI = false,
-                    ShowProgressIndicatorUI = false
+                    ShowProgressIndicatorUI = false,
+                    ShouldTransferAllPages = true
+                };
+
+                settings.Resolution = job.Settings.Dpi switch
+                {
+                    200 => ResolutionSettings.Fax,
+                    300 => ResolutionSettings.ColourPhotocopier,
+                    600 => ResolutionSettings.ColourPhotocopier,
+                    _ => ResolutionSettings.ColourPhotocopier
                 };
 
                 form.Shown += (s, e) =>
