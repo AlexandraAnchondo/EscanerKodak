@@ -1,72 +1,34 @@
-using TwainDotNet.WinFroms;
-using TwainDotNet;
-
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
-builder.Logging.SetMinimumLevel(LogLevel.Warning);
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSingleton<ScanService>(); // Registrar servicio
+builder.Services.AddSingleton<ScanService>();
 
 var app = builder.Build();
 
-app.MapGet("/health", () =>
+app.MapGet("/health", () => Results.Ok());
+
+app.MapGet("/scanners", (ScanService s) =>
+    Results.Ok(s.GetScanners()));
+
+app.MapPost("/select-scanner", (ScanService s) =>
 {
-    return Results.Ok(new { ok = true });
+    var name = s.SelectScannerWithUI();
+    return Results.Ok(new[] { name });
 });
 
-app.MapGet("/scanners", (ScanService service) =>
+app.MapPost("/scan", (ScanService s, ScanRequest req) =>
 {
-    List<string> scanners = null;
-
-    var thread = new Thread(() =>
-    {
-        using var form = new Form();
-        form.ShowInTaskbar = false;
-        form.WindowState = FormWindowState.Minimized;
-
-        var twain = new Twain(new WinFormsWindowMessageHook(form));
-        scanners = twain.SourceNames.ToList(); // <- guardar en variable externa
-    });
-
-    thread.SetApartmentState(ApartmentState.STA);
-    thread.Start();
-    thread.Join();
-
-    return scanners ?? new List<string>();
+    var id = s.StartScan(
+        req.Settings.Dpi,
+        req.Settings.ColorMode,
+        req.Settings.Duplex,
+        req.Settings.UseFeeder
+    );
+    return Results.Ok(new { jobId = id });
 });
 
-app.MapPost("/scan", (ScanRequest req, ScanService service) =>
+app.MapGet("/scan/status/{id:guid}", (ScanService s, Guid id) =>
 {
-    if (string.IsNullOrWhiteSpace(req.ScannerName))
-        return Results.BadRequest("ScannerName requerido");
-
-    var jobId = service.QueueScan(req.ScannerName, req.Settings);
-    return Results.Ok(new { jobId });
+    var job = s.GetJob(id);
+    return job == null ? Results.NotFound() : Results.Ok(job);
 });
 
-app.MapGet("/scan/status/{id}", (string id, ScanService service) =>
-{
-    if (!Guid.TryParse(id, out var guid))
-        return Results.BadRequest("ID inválido");
-
-    var job = service.GetJob(guid);
-    if (job == null)
-        return Results.NotFound();
-
-    if (!job.Completed)
-        return Results.Ok(new { status = "pending" });
-
-    if (job.Error != null)
-        return Results.Ok(new { status = "error", error = job.Error.Message });
-
-    return Results.Ok(new
-    {
-        status = "done",
-        files = job.ImagePaths.Select(Path.GetFileName)
-    });
-});
-
-app.Run();
+app.Run("http://localhost:5000");

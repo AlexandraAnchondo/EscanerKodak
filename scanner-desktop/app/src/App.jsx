@@ -134,7 +134,11 @@ function App() {
   useEffect(() => {
     fetch('http://localhost:3001/scanners')
       .then(r => r.json())
-      .then(setScanners)
+      .then(data => {
+        if (data.length > 0) {
+          setSelectedScanner(data[0])
+        }
+      })
   }, [])
 
   useEffect(() => {
@@ -201,19 +205,31 @@ function App() {
           Seleccione el escáner
         </Typography>
 
-        <FormControl fullWidth sx={{ mb: 3 }}>
-          <InputLabel sx={{ color: '#fcfcfc' }}>Escáner</InputLabel>
-          <Select
-            value={selectedScanner}
-            label="Escáner"
-            onChange={e => setSelectedScanner(e.target.value)}
-            sx={{ color: '#fcfcfc' }}
-          >
-            {scanners.map(s => (
-              <MenuItem key={s} value={s} >{s}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Typography
+          sx={{ color: '#fcfcfc', mb: 2 }}
+        >
+          Escáner seleccionado:
+          <br />
+          <b>
+            {selectedScanner || 'Ninguno'}
+          </b>
+        </Typography>
+
+        <Button
+          variant="contained"
+          color="warning"
+          onClick={async () => {
+            const res = await fetch('http://localhost:3001/select-scanner', { method: 'POST' });
+            const data = await res.json(); // data = ["KODAK S3060"]
+
+            if (data && data.length > 0) {
+              setSelectedScanner(data[0]);
+              setScanners(data);
+            }
+          }}
+        >
+          Seleccionar escáner
+        </Button>
 
         <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ color: '#fcfcfc' }}>
           Opciones de escaneo

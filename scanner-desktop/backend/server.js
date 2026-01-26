@@ -117,6 +117,16 @@ app.post('/create-pdf', async (req, res) => {
     }
 })
 
+app.post('/select-scanner', async (req, res) => {
+    const r = await fetch('http://localhost:5000/select-scanner', {
+        method: 'POST'
+    })
+
+    const { name } = await r.json()
+    cachedScanners = [name]
+
+    res.json({ name })
+})
 
 app.listen(3001, () =>
     console.log('Backend corriendo en http://localhost:3001')

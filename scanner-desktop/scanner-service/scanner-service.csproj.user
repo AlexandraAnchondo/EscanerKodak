@@ -4,4 +4,9 @@
     <ActiveDebugProfile>https</ActiveDebugProfile>
     <NameOfLastUsedPublishProfile>C:\Users\alexandra.anchondo\Documents\Github\EscanerKodak\scanner-desktop\scanner-service\Properties\PublishProfiles\FolderProfile.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Update="TwainHiddenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
 </Project>

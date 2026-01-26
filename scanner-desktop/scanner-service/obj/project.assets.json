@@ -1,39 +1,11 @@
 {
   "version": 3,
   "targets": {
-    "net9.0-windows7.0": {
-      "TwainDotNet.Win/1.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/net40/TwainDotNet.Win.dll": {},
-          "lib/net40/TwainDotNet.dll": {}
-        },
-        "runtime": {
-          "lib/net40/TwainDotNet.Win.dll": {},
-          "lib/net40/TwainDotNet.dll": {}
-        }
-      }
-    }
+    "net8.0-windows7.0": {}
   },
-  "libraries": {
-    "TwainDotNet.Win/1.0.0": {
-      "sha512": "JLT7lBQF07LAr+1X+gUKnIlIYe1NHC62OrzDIPFbJ0jX7itPSPQW2jAQIYB4IL/k+YTUhIBsNQBceMeVJ4u51A==",
-      "type": "package",
-      "path": "twaindotnet.win/1.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net40/TwainDotNet.Win.dll",
-        "lib/net40/TwainDotNet.dll",
-        "twaindotnet.win.1.0.0.nupkg.sha512",
-        "twaindotnet.win.nuspec"
-      ]
-    }
-  },
+  "libraries": {},
   "projectFileDependencyGroups": {
-    "net9.0-windows7.0": [
-      "TwainDotNet.Win >= 1.0.0"
-    ]
+    "net8.0-windows7.0": []
   },
   "packageFolders": {
     "C:\\Users\\alexandra.anchondo\\.nuget\\packages\\": {},
@@ -57,15 +29,15 @@
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net9.0-windows"
+        "net8.0-windows"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net9.0-windows7.0": {
-          "targetAlias": "net9.0-windows",
+        "net8.0-windows7.0": {
+          "targetAlias": "net8.0-windows",
           "projectReferences": {}
         }
       },
@@ -82,14 +54,8 @@
       "SdkAnalysisLevel": "9.0.100"
     },
     "frameworks": {
-      "net9.0-windows7.0": {
-        "targetAlias": "net9.0-windows",
-        "dependencies": {
-          "TwainDotNet.Win": {
-            "target": "Package",
-            "version": "[1.0.0, )"
-          }
-        },
+      "net8.0-windows7.0": {
+        "targetAlias": "net8.0-windows",
         "imports": [
           "net461",
           "net462",
@@ -115,17 +81,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "El paquete \"TwainDotNet.Win 1.0.0\" se restauró con \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1\" en lugar de la plataforma de destino del proyecto \"net9.0-windows7.0\". Puede que el paquete no sea totalmente compatible con el proyecto.",
-      "libraryId": "TwainDotNet.Win",
-      "targetGraphs": [
-        "net9.0-windows7.0"
-      ]
-    }
-  ]
+  }
 }

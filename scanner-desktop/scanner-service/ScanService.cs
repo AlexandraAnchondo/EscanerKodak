@@ -1,139 +1,102 @@
-using System;
+using Dynarithmic;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using TwainDotNet;
-using TwainDotNet.WinFroms;
-
-public class ScanJob
-{
-    public string ScannerName { get; set; }
-    public ScanSettingsDto Settings { get; set; }   // ⬅️ NUEVO
-    public List<string> ImagePaths { get; set; } = new();
-    public bool Completed { get; set; }
-    public Exception Error { get; set; }
-}
+using System.Text;
 
 public class ScanService
 {
     private readonly ConcurrentDictionary<Guid, ScanJob> _jobs = new();
-    private readonly string _scanFolder = Path.Combine(AppContext.BaseDirectory, "scans");
+    private readonly string _scanDir =
+        Path.Combine(AppContext.BaseDirectory, "scans");
 
-    public Guid QueueScan(string scannerName, ScanSettingsDto settings)
+    public ScanService()
     {
+        Directory.CreateDirectory(_scanDir);
+    }
+
+    // ---------- SCANNERS ----------
+    public List<string> GetScanners()
+    {
+        var saved = ScannerStore.Load();
+        return saved != null ? new() { saved } : new();
+    }
+
+    public string SelectScannerWithUI()
+    {
+        var h = TwainAPI.DTWAIN_SysInitialize();
+        if (h == IntPtr.Zero)
+            throw new Exception("DTWAIN no inicializó");
+
+        var src = TwainAPI.DTWAIN_SelectSource();
+        if (src == IntPtr.Zero)
+            throw new Exception("No se seleccionó scanner");
+
+        var sb = new StringBuilder(256);
+        TwainAPI.DTWAIN_GetSourceProductName(src, sb, sb.Capacity);
+
+        var name = sb.ToString();
+        ScannerStore.Save(name);
+
+        TwainAPI.DTWAIN_SysDestroy();
+        return name;
+    }
+
+    // ---------- SCAN ----------
+    public Guid StartScan(int dpi, string colorMode, bool duplex, bool feeder)
+    {
+        var scannerName = ScannerStore.Load();
+        if (scannerName == null)
+            throw new Exception("Scanner no configurado");
+
         var jobId = Guid.NewGuid();
-
-        var job = new ScanJob
-        {
-            ScannerName = scannerName,
-            Settings = settings
-        };
-
+        var job = new ScanJob { Status = "pending" };
         _jobs[jobId] = job;
 
-        Task.Run(() => RunScan(jobId, job));
+        new Thread(() =>
+        {
+            try
+            {
+                var h = TwainAPI.DTWAIN_SysInitialize();
+                if (h == IntPtr.Zero)
+                    throw new Exception("DTWAIN no inicializó");
+
+                var src = TwainAPI.DTWAIN_SelectSourceByName(scannerName);
+                if (src == IntPtr.Zero)
+                    throw new Exception("No se pudo abrir el scanner");
+
+                var file = Path.Combine(_scanDir, $"{jobId}.bmp");
+
+                TwainAPI.DTWAIN_SetResolution(src, dpi);
+                TwainAPI.DTWAIN_EnableDuplex(src, duplex ? 1 : 0);
+
+                int status = 0;
+                TwainAPI.DTWAIN_AcquireFile(
+                    src,
+                    file,
+                    TwainAPI.DTWAIN_BMP,
+                    TwainAPI.DTWAIN_USENATIVE | TwainAPI.DTWAIN_USENAME,
+                    TwainAPI.DTWAIN_PT_DEFAULT,
+                    1,
+                    1,
+                    1,
+                    ref status
+                );
+
+                job.Files.Add(Path.GetFileName(file));
+                job.Status = "completed";
+
+                TwainAPI.DTWAIN_SysDestroy();
+            }
+            catch (Exception ex)
+            {
+                job.Status = "error";
+                job.Error = ex.Message;
+            }
+        })
+        { IsBackground = true }.Start();
+
         return jobId;
     }
 
-    public ScanJob GetJob(Guid jobId)
-    {
-        if (_jobs.TryGetValue(jobId, out var job))
-            return job;
-        return null;
-    }
-
-    private void RunScan(Guid jobId, ScanJob job)
-    {
-        try
-        {
-            var thread = new Thread(() =>
-            {
-                using var form = new Form();
-                form.ShowInTaskbar = false;
-                form.StartPosition = FormStartPosition.CenterScreen;
-                form.Size = new Size(200, 200);
-                form.Location = new Point(0, 0);
-                form.WindowState = FormWindowState.Normal;
-
-                var twain = new Twain(new WinFormsWindowMessageHook(form));
-
-                if (!twain.SourceNames.Contains(job.ScannerName))
-                    throw new Exception("Scanner no encontrado");
-
-                List<Image> scannedImages = new List<Image>();
-
-                twain.TransferImage += (s, e) =>
-                {
-                    if (e.Image != null)
-                        scannedImages.Add(e.Image);
-                };
-
-                twain.ScanningComplete += (s, e) =>
-                {
-                    // Cuando TWAIN termina, cerramos el formulario y liberamos el hilo
-                    form.Invoke(new Action(() => form.Close()));
-                };
-
-                var settings = new TwainDotNet.ScanSettings
-                {
-                    UseDocumentFeeder = job.Settings.UseFeeder,
-                    UseDuplex = job.Settings.Duplex,
-                    ShowTwainUI = false,
-                    ShowProgressIndicatorUI = false,
-                    ShouldTransferAllPages = true
-                };
-
-                settings.Resolution = job.Settings.Dpi switch
-                {
-                    200 => ResolutionSettings.Fax,
-                    300 => ResolutionSettings.ColourPhotocopier,
-                    600 => ResolutionSettings.ColourPhotocopier,
-                    _ => ResolutionSettings.ColourPhotocopier
-                };
-
-                form.Shown += (s, e) =>
-                {
-                    twain.SelectSource(job.ScannerName);
-                    twain.StartScanning(settings);
-                };
-
-                Application.Run(form); // Aquí TWAIN puede procesar mensajes
-
-                // Guardar imágenes
-                string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "scans");
-                Directory.CreateDirectory(folder);
-
-                // Después de guardar cada imagen
-                Directory.CreateDirectory(_scanFolder);
-
-                foreach (var img in scannedImages)
-                {
-                    string fileName = $"scan_{Guid.NewGuid()}.jpg";
-                    string path = Path.Combine(_scanFolder, fileName);
-
-                    img.Save(path, ImageFormat.Jpeg);
-                    job.ImagePaths.Add(fileName);
-                    img.Dispose();
-                }
-
-                job.Completed = true;
-            });
-
-            thread.SetApartmentState(ApartmentState.STA);
-            thread.Start();
-            thread.Join(); // Esperar a que el hilo STA termine
-        }
-        catch (Exception ex)
-        {
-            job.Error = ex;
-            job.Completed = true;
-        }
-    }
-
+    public ScanJob? GetJob(Guid id)
+        => _jobs.TryGetValue(id, out var j) ? j : null;
 }
