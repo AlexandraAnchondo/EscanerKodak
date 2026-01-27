@@ -3,6 +3,10 @@
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.SetMinimumLevel(LogLevel.Warning);
+
 // 🔹 Controllers
 builder.Services.AddControllers();
 

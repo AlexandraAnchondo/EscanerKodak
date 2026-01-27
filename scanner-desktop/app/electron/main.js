@@ -32,7 +32,6 @@ app.whenReady().then(() => {
     })
 
     mainWindow.loadURL('http://localhost:5173')
-    mainWindow.webContents.openDevTools()
 })
 
 // 🔹 Guardar PDF nativo
