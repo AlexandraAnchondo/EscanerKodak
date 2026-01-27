@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 public class ScanController : ControllerBase
 {
     [HttpPost]
-    public IActionResult Scan()
+    public IActionResult Scan([FromBody] ScanRequest request)
     {
         string fileName = $"scan_{DateTime.Now.Ticks}.pdf";
         string filePath = Path.Combine("Files", fileName);
@@ -25,6 +25,22 @@ public class ScanController : ControllerBase
         }
 
         TwainAPI.DTWAIN_EnableAutoFeed(source, 1);
+
+        // 🔁 Duplex según usuario
+        if (request.Duplex)
+        {
+            if (TwainAPI.DTWAIN_IsDuplexSupported(source) == 1)
+            {
+                TwainAPI.DTWAIN_EnableDuplex(source, 1);
+
+                // opcional: contar páginas como hojas físicas
+                TwainAPI.DTWAIN_SetDoublePageCountOnDuplex(source, 0);
+            }
+        }
+        else
+        {
+            TwainAPI.DTWAIN_EnableDuplex(source, 0);
+        }
 
         int status = 0;
 

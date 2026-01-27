@@ -3,7 +3,9 @@ import {
   Box,
   Button,
   Typography,
-  LinearProgress
+  LinearProgress,
+  FormControlLabel,
+  Switch
 } from '@mui/material'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
@@ -11,6 +13,7 @@ import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 export default function App() {
   const [pdf, setPdf] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [duplex, setDuplex] = useState(true) // por default duplex
 
   const scan = async () => {
     setLoading(true)
@@ -18,7 +21,9 @@ export default function App() {
 
     try {
       const r = await fetch('http://localhost:5000/scan', {
-        method: 'POST'
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ duplex })
       })
 
       const d = await r.json()
@@ -64,6 +69,17 @@ export default function App() {
       <Box display="flex" gap={3} height="calc(100% - 64px)">
         {/* PANEL IZQUIERDO */}
         <Box width={280} display="flex" flexDirection="column" gap={2}>
+
+          <FormControlLabel
+            control={
+              <Switch
+                checked={duplex}
+                onChange={(e) => setDuplex(e.target.checked)}
+              />
+            }
+            label={duplex ? 'Duplex (2 caras)' : 'Simplex (1 cara)'}
+          />
+
           <Button
             variant="contained"
             size="large"

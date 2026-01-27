@@ -6,7 +6,13 @@
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "ScanRequest",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {
