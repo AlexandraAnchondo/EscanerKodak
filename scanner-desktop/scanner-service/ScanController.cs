@@ -61,4 +61,16 @@ public class ScanController : ControllerBase
             status
         });
     }
+
+    [HttpDelete("{file}")]
+    public IActionResult Delete(string file)
+    {
+        var path = Path.Combine("Files", file);
+
+        if (!System.IO.File.Exists(path))
+            return NotFound();
+
+        System.IO.File.Delete(path);
+        return Ok();
+    }
 }

@@ -17,6 +17,7 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.7",
     "@mui/material": "^7.3.7",
+    "electron-builder": "^26.4.0",
     "kill-port": "^2.0.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
