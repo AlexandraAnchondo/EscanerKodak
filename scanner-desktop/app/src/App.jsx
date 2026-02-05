@@ -5,8 +5,13 @@ import {
   Typography,
   LinearProgress,
   FormControlLabel,
-  Switch
+  Switch,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
 } from '@mui/material'
+
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 
@@ -14,6 +19,7 @@ export default function App() {
   const [pdf, setPdf] = useState(null)
   const [loading, setLoading] = useState(false)
   const [duplex, setDuplex] = useState(true) // por default duplex
+  const [colorMode, setColorMode] = useState('color') // bw | gray | color
 
   const scan = async () => {
     setLoading(true)
@@ -23,7 +29,7 @@ export default function App() {
       const r = await fetch('http://localhost:5000/scan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ duplex })
+        body: JSON.stringify({ duplex, colorMode })
       })
 
       const d = await r.json()
@@ -79,6 +85,22 @@ export default function App() {
             }
             label={duplex ? 'Duplex (2 caras)' : 'Simplex (1 cara)'}
           />
+
+          { /* Make this FormControl white */ }
+          <FormControl fullWidth size="small">
+            <InputLabel id="color-mode-label" style={{ color: 'white' }}>Modo de color</InputLabel>
+            <Select
+              style={{ color: 'white' }}
+              labelId="color-mode-label"
+              value={colorMode}
+              label="Modo de color"
+              onChange={(e) => setColorMode(e.target.value)}
+            >
+              <MenuItem value="bw">Blanco y negro</MenuItem>
+              <MenuItem value="gray">Escala de grises</MenuItem>
+              <MenuItem value="color">Color</MenuItem>
+            </Select>
+          </FormControl>
 
           <Button
             variant="contained"

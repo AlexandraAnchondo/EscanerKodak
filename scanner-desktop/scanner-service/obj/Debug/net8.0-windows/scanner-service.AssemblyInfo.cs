@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("scanner-service")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+00b8dd9b7d05edab4c386463212491958cf50064")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+feceaa94e7787108712464aaff6c5b4f8dd1fcf2")]
 [assembly: System.Reflection.AssemblyProductAttribute("scanner-service")]
 [assembly: System.Reflection.AssemblyTitleAttribute("scanner-service")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

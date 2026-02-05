@@ -42,6 +42,27 @@ public class ScanController : ControllerBase
             TwainAPI.DTWAIN_EnableDuplex(source, 0);
         }
 
+        int pixelType = TwainAPI.DTWAIN_PT_DEFAULT;
+
+        switch (request.ColorMode?.ToLower())
+        {
+            case "bw":
+                pixelType = TwainAPI.DTWAIN_PT_BW;
+                break;
+
+            case "gray":
+                pixelType = TwainAPI.DTWAIN_PT_GRAY;
+                break;
+
+            case "color":
+                pixelType = TwainAPI.DTWAIN_PT_RGB;
+                break;
+
+            default:
+                pixelType = TwainAPI.DTWAIN_PT_DEFAULT;
+                break;
+        }
+
         int status = 0;
 
         int result = TwainAPI.DTWAIN_AcquireFile(
@@ -49,7 +70,7 @@ public class ScanController : ControllerBase
             filePath,
             TwainAPI.DTWAIN_PDFMULTI,
             TwainAPI.DTWAIN_USENATIVE | TwainAPI.DTWAIN_USENAME,
-            TwainAPI.DTWAIN_PT_DEFAULT,
+            pixelType,
             -1,
             0,
             1,
